@@ -149,8 +149,18 @@ class ModelResult:
     schema_version: str = "1.0"
 
     def __post_init__(self) -> None:
-        if (self.output is None) == (self.failure is None):
-            raise ValueError("model result must contain exactly one of output or failure")
+        if self.status is ModelStatus.SUCCEEDED:
+            if self.output is None or self.failure is not None:
+                raise ValueError(
+                    "a succeeded model result requires output and prohibits failure"
+                )
+        elif self.status is ModelStatus.FAILED:
+            if self.failure is None or self.output is not None:
+                raise ValueError(
+                    "a failed model result requires failure and prohibits output"
+                )
+        else:
+            raise ValueError("status must be a supported ModelStatus")
         if type(self.latency_ms) is not int or self.latency_ms < 0:
             raise ValueError("latency_ms must be a non-negative integer")
 

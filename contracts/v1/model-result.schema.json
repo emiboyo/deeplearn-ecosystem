@@ -30,8 +30,16 @@
     "failure": { "$ref": "model-error.schema.json" }
   },
   "oneOf": [
-    { "required": ["output"], "not": { "required": ["failure"] } },
-    { "required": ["failure"], "not": { "required": ["output"] } }
+    {
+      "properties": { "status": { "const": "succeeded" } },
+      "required": ["output"],
+      "not": { "required": ["failure"] }
+    },
+    {
+      "properties": { "status": { "const": "failed" } },
+      "required": ["failure"],
+      "not": { "required": ["output"] }
+    }
   ],
   "$defs": {
     "id": { "type": "string", "minLength": 8, "maxLength": 128 }

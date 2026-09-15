@@ -10,10 +10,13 @@ from deeplearn.core.models import (
     DeterministicFakeAdapter,
     DuplicateAdapterError,
     FakeFailure,
+    ModelFailure,
     ModelFailureCategory,
     ModelRequest,
+    ModelResult,
     ModelRouter,
     ModelStatus,
+    ModelUsage,
 )
 
 
@@ -36,6 +39,61 @@ def _result(adapter: DeterministicFakeAdapter | None = None):
     router = ModelRouter()
     router.register(adapter or DeterministicFakeAdapter())
     return router.complete(_request())
+
+
+def _failure() -> ModelFailure:
+    return ModelFailure(
+        category=ModelFailureCategory.PROVIDER_FAILURE,
+        code="model.provider_failure",
+        message="The selected model provider failed.",
+        retryable=True,
+    )
+
+
+def _model_result(
+    status: ModelStatus,
+    *,
+    output: str | None = None,
+    failure: ModelFailure | None = None,
+) -> ModelResult:
+    return ModelResult(
+        request_id="model_req_0001",
+        status=status,
+        output=output,
+        failure=failure,
+        provider_id="test.fake",
+        model_id="test.fake-text",
+        model_version="1.0.0",
+        latency_ms=7,
+        usage=ModelUsage(input_units=5, output_units=10, total_units=15),
+        correlation_id="corr_model_0001",
+    )
+
+
+@pytest.mark.parametrize(
+    ("status", "output", "failure"),
+    [
+        (ModelStatus.SUCCEEDED, None, _failure()),
+        (ModelStatus.FAILED, "contradictory output", None),
+        (ModelStatus.SUCCEEDED, None, None),
+        (ModelStatus.FAILED, None, None),
+        (ModelStatus.SUCCEEDED, "output", _failure()),
+    ],
+)
+def test_model_result_rejects_status_payload_contradictions(
+    status: ModelStatus,
+    output: str | None,
+    failure: ModelFailure | None,
+) -> None:
+    with pytest.raises(ValueError):
+        _model_result(status, output=output, failure=failure)
+
+
+def test_model_result_accepts_valid_success_and_failure() -> None:
+    success = _model_result(ModelStatus.SUCCEEDED, output="fake:hello")
+    failed = _model_result(ModelStatus.FAILED, failure=_failure())
+    assert success.output == "fake:hello" and success.failure is None
+    assert failed.failure is not None and failed.output is None
 
 
 def test_router_records_selected_provider_model_and_version() -> None:
@@ -162,3 +220,14 @@ def test_model_wire_contracts_are_provider_neutral_and_controlled() -> None:
     assert {"provider_id", "model_id", "model_version", "latency_ms", "usage"} <= set(
         result_schema["required"]
     )
+    success_branch, failure_branch = result_schema["oneOf"]
+    assert success_branch == {
+        "properties": {"status": {"const": "succeeded"}},
+        "required": ["output"],
+        "not": {"required": ["failure"]},
+    }
+    assert failure_branch == {
+        "properties": {"status": {"const": "failed"}},
+        "required": ["failure"],
+        "not": {"required": ["output"]},
+    }
