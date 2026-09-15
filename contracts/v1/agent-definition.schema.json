@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/agent-definition.schema.json",
+  "title": "DeepLearn AgentDefinition v1",
+  "description": "Agent Registry-owned declarative definition. It contains no executable callbacks and grants no authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "agent_id", "version", "owner", "purpose", "lifecycle", "input_contract_ref", "output_contract_ref", "allowed_tools", "allowed_purposes", "required_scopes", "autonomy", "execution_limits", "model_requirements", "created_at"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "agent_id": { "$ref": "#/$defs/identifier" },
+    "version": { "$ref": "#/$defs/semantic_version" },
+    "owner": { "$ref": "#/$defs/identifier" },
+    "purpose": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "lifecycle": { "enum": ["draft", "active", "deprecated", "retired"] },
+    "input_contract_ref": { "$ref": "#/$defs/contract_reference" },
+    "output_contract_ref": { "$ref": "#/$defs/contract_reference" },
+    "allowed_tools": { "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true },
+    "allowed_purposes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true },
+    "required_scopes": { "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true },
+    "autonomy": { "enum": ["assist", "recommend", "prepare", "execute"] },
+    "execution_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_steps", "max_duration_ms", "max_cost_units"],
+      "properties": {
+        "max_steps": { "type": "integer", "minimum": 1 },
+        "max_duration_ms": { "type": "integer", "minimum": 1 },
+        "max_cost_units": { "type": "number", "minimum": 0 }
+      }
+    },
+    "model_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capabilities"],
+      "properties": {
+        "capabilities": { "type": "array", "minItems": 1, "items": { "enum": ["text_generation"] }, "uniqueItems": true }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$" },
+    "semantic_version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+    "contract_reference": { "type": "string", "pattern": "^contracts/v[1-9][0-9]*/[a-z0-9_./-]+\\.schema\\.json$" }
+  }
+}

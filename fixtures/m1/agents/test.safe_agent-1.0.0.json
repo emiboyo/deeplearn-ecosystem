@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "agent_id": "test.safe_agent",
+  "version": "1.0.0",
+  "owner": "deeplearn.core.test",
+  "purpose": "Safe synthetic agent used only to prove registry and lifecycle behavior.",
+  "lifecycle": "active",
+  "input_contract_ref": "contracts/v1/agents/test-safe-agent-input.schema.json",
+  "output_contract_ref": "contracts/v1/agents/test-safe-agent-output.schema.json",
+  "allowed_tools": ["test.safe_echo"],
+  "allowed_purposes": ["test.execute_safe_tool"],
+  "required_scopes": ["test.safe_tool.invoke"],
+  "autonomy": "assist",
+  "execution_limits": {
+    "max_steps": 3,
+    "max_duration_ms": 5000,
+    "max_cost_units": 1
+  },
+  "model_requirements": {
+    "capabilities": ["text_generation"]
+  },
+  "created_at": "2030-01-01T00:00:00Z"
+}
