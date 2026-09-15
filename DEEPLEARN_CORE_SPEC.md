@@ -8,14 +8,33 @@ DeepLearn Core supplies generic governed intelligence capabilities. It does not 
 
 An **agent definition** is a versioned declarative contract containing identity, owner, purpose, allowed autonomy, input/output schemas, instructions or policy references, model requirements, registered tools, memory/context policy, permission scopes, budgets/limits, evaluation suite, and lifecycle status. A running agent is an execution of one definition version; it is never authority by itself.
 
+Three identity types must remain distinct:
+
+- **Human Principal:** the authenticated human ultimately responsible for an action.
+- **Service Principal:** an authenticated backend service or trusted system identity accountable for a request.
+- **Agent Execution Identity:** the specific running agent instance and definition version performing work.
+
+An Agent Execution Identity does not independently own authority. Its authority always derives from an authenticated Human Principal or Service Principal plus explicit delegation and policy. An agent may never grant itself, another agent, or another service more authority than the originating principal possesses and is permitted to delegate. Across agent-to-agent delegation, tool invocation, workflow delegation, cross-product requests, and service-to-service calls, authority may only narrow or remain equivalent unless a separate independently authorised principal grants additional authority.
+
+Delegated authority must eventually be represented by structured, machine-comparable scopes or policy facts so downstream authority can be verified as equal to or narrower than the original grant. Effective delegated authority is the intersection of the originating principal authority, delegable authority, requested action and purpose, policy constraints, and tool or service constraints. This requirement does not prescribe a specific authorisation framework.
+
+Provisionally, a **consequential action** is one that may create a meaningful financial, legal or regulatory, physical-world, privacy or data-sharing, or safety effect; an irreversible or difficult-to-reverse effect; an account, identity, or permission change; or an externally visible commitment or transaction. Product-specific policy may refine this shared definition.
+
 ## Common contract vocabulary
 
-- `PrincipalContext`: human/service identity, tenant, product, roles, consent and delegation references.
-- `ExecutionRequest/Result`: agent/version, typed input/output, policy and budget envelope, timestamps and status.
+- `PrincipalContext`: authenticated Human Principal or Service Principal, tenant, product, roles, consent and delegation references.
+- `AgentExecutionIdentity`: execution ID, agent definition/version, owning product/service and accountable originating principal reference; it is not an independent authority source.
+- `ExecutionRequest/Result`: Agent Execution Identity, typed input/output, policy and budget envelope, timestamps and status.
 - `ToolRequest/Result`: registered tool/version, validated arguments/result, idempotency key and evidence.
 - `Decision`: allow, deny, or require approval, plus reasons, constraints and policy version.
 - `EventEnvelope`: event ID/type/version, producer, subject, occurred-at, tenant/product, trace/correlation/causation IDs, classification and payload reference.
 - Contracts are versioned, schema-validated, authenticated, authorised, observable, and documented with compatibility and error semantics.
+
+### Capability Manifest
+
+A `CapabilityManifest` is a versioned, machine-readable description of what a product, agent, or service can do. A manifest may include capability name and version, input/output schema, required permissions, required purpose, risk classification, side-effect classification, whether approval may be required, idempotency behavior, and availability or deprecation state. For example, PBcoms may advertise `create_order`, `get_inventory`, and `request_fulfilment`, while PearlBridge may advertise `quote_delivery`, `book_delivery`, and `track_delivery`.
+
+A manifest supports discovery only and does not grant authority. Every invocation still requires authentication, permission checks, purpose checks, policy evaluation, and approval where applicable. Registry implementation is deferred.
 
 ## Module specifications
 
@@ -48,7 +67,7 @@ An **agent definition** is a versioned declarative contract containing identity,
 - **Non-responsibilities:** Decide business actions, own prompts or conceal semantic differences between models.
 - **Public interface:** `complete`, `stream`, `embed` where supported, `capabilities`, `estimate`.
 - **Dependencies/data:** Provider adapters, configuration/secrets, policy, telemetry and evaluation scores; transient authorised prompt/context only.
-- **Security/permissions:** Provider allowlists, residency/classification controls, secret isolation, prompt minimisation and redaction.
+- **Security/permissions:** Provider allowlists, residency/classification controls, secret isolation, prompt minimisation and redaction. Provider settings and contracts prevent training on customer data wherever product policy or law requires it.
 - **Events:** Emits model invocation completed/failed/rerouted and budget exceeded; consumes provider health/config changes.
 - **MVP / later:** One adapter behind an owned interface and explicit model selection; later policy routing, multiple providers, hedging and continuous quality/cost optimisation.
 
@@ -144,7 +163,7 @@ An **agent definition** is a versioned declarative contract containing identity,
 
 - **Purpose:** Measure agent quality, safety, policy compliance and operational fitness before and during release.
 - **Responsibilities:** Version datasets/rubrics, run deterministic and model-assisted checks, compare models/agents, gate promotion, monitor regressions and collect authorised feedback.
-- **Non-responsibilities:** Declare subjective truth without governance, use private production data without approval, replace tests or monitoring.
+- **Non-responsibilities:** Declare subjective truth without governance, automatically use customer or vertical data for training, fine-tuning, external-provider training, or cross-product learning datasets, replace tests or monitoring.
 - **Public interface:** `runSuite`, `compare`, `recordFeedback`, `qualificationStatus`.
 - **Dependencies/data:** Registry, router, tool mocks, audit samples and product-owned evaluation sets; de-identified/minimised cases where possible.
 - **Security/permissions:** Dataset access controls, contamination tracking, reproducibility, reviewer provenance and protected red-team cases.
@@ -164,12 +183,12 @@ An **agent definition** is a versioned declarative contract containing identity,
 
 ### Identity and Authentication
 
-- **Purpose:** Establish verifiable human, service and agent principals without implying authority.
-- **Responsibilities:** Authenticate supported principals, issue/validate sessions or credentials, represent tenant/product membership and service/agent accountability, and support revocation.
+- **Purpose:** Establish verifiable Human Principals and Service Principals, and bind distinct Agent Execution Identities to them, without implying authority.
+- **Responsibilities:** Authenticate human and service principals; issue/validate sessions or credentials; create or validate agent execution bindings containing the specific instance and definition version; represent tenant/product membership and accountability; and support revocation.
 - **Non-responsibilities:** Make resource-level permission decisions, own vertical profiles, or merge identities across products without governance.
 - **Public interface:** `authenticate`, `validateCredential`, `resolvePrincipal`, `revoke`, and lifecycle hooks behind provider-neutral contracts.
 - **Dependencies/data:** Identity-provider adapters, protected credential/session stores and audit; identifiers and necessary authentication attributes only.
-- **Security/permissions:** Strong credential protection, phishing/replay resistance appropriate to risk, machine credential rotation, session limits and recovery controls.
+- **Security/permissions:** Never conflate human, service, and agent execution identities. An agent execution receives authority only through explicit delegation and policy from an authenticated Human Principal or Service Principal. Apply strong credential protection, phishing/replay resistance appropriate to risk, machine credential rotation, session limits and recovery controls.
 - **Events:** Emits identity/session created, authenticated, failed, revoked and membership changed; consumes provider and account lifecycle events.
 - **MVP / later:** Test human/service identities with deterministic authentication; later federated identity, stronger factors and governed cross-product account linking.
 
@@ -251,8 +270,10 @@ Every consequential request carries a stable idempotency key scoped to principal
 
 Create a correlation ID at ingress and a trace ID/span chain across synchronous and asynchronous work; preserve causation IDs for events. Do not encode sensitive information in identifiers. Audit, logs, tool calls and outcomes must be joinable through these identifiers.
 
-Trust boundaries exist at every user/device, model provider, tool, product, tenant, data store, event subscriber, adapter and external company. Authenticate, authorise and validate on each crossing. Vertical stores remain under vertical ownership; shared Core stores contain only generic platform data and explicitly governed references.
+Trust boundaries exist at every user/device, model provider, tool, product, tenant, data store, event subscriber, adapter, external company, and internal operator, support, administrator, or other privileged-access path. Authenticate, authorise and validate on each crossing. Internal privileged access is never automatically trusted merely because it is internal: it requires authentication, must be purpose-bound and least-privilege, must respect vertical and tenant boundaries, and must be audited, with break-glass controls where appropriate. Vertical stores remain under vertical ownership; shared Core stores contain only generic platform data and explicitly governed references. A full administration system is outside the current scope.
 
 ## Service-contract requirements
 
-Every service contract states owner and consumers; version and compatibility policy; request/response or event schemas; authentication and permissions; purpose and data classification; consent and retention; idempotency; timeout/retry/rate limits; error model; audit obligations; SLO expectations; deprecation process; and test fixtures. Cross-product contracts require approval from both owning boundaries. Contract evolution should favour additive changes and consumer-driven verification.
+Every service contract states owner and consumers; version and compatibility policy; request/response or event schemas; authentication and permissions; declared purpose and data classification; consent and retention; idempotency; timeout/retry/rate limits; error model; audit obligations; SLO expectations; deprecation process; and test fixtures. Cross-product requests carry an explicit declared purpose where relevant, and the receiving service evaluates whether both permission and purpose are authorised. Cross-product contracts require approval from both owning boundaries. Contract evolution should favour additive changes and consumer-driven verification.
+
+Customer or vertical data is not automatically available for model training, fine-tuning, external-provider training, or cross-product learning datasets. Those uses require explicit governance, lawful basis, declared purpose, approval, and appropriate consent or contractual authority. Operational processing needed to execute an authorised request is a separate purpose and does not imply permission for training.

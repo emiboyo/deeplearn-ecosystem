@@ -62,7 +62,7 @@ This file contains accepted foundation decisions. Proposed changes must be added
 
 - **Status:** Accepted
 - **Context:** Verticals may become independent companies.
-- **Decision:** Preserve separable data ownership, identity/authorisation contexts, service contracts, deployment configuration, economics and operational accountability. This does not require microservices today.
+- **Decision:** Preserve each vertical's separable domain contracts, domain data ownership, migrations, identity/authorisation contexts, deployment configuration, economics and operational accountability, with its own release lifecycle where practical and independently replaceable or deployable boundaries over time. This does not require microservices today.
 - **Consequences:** Clearer boundaries and optionality; shared shortcuts that prevent separation are disallowed.
 
 ## ADR-010 — Architecture documentation is authoritative
@@ -85,3 +85,24 @@ This file contains accepted foundation decisions. Proposed changes must be added
 - **Context:** Automated changes need review and recoverability.
 - **Decision:** Autonomous coding agents work on focused branches and must not directly commit or push to `main`, merge, force-push, rewrite history, or delete branches.
 - **Consequences:** Human review remains a control point; emergency exceptions require explicit human direction and a recorded rationale.
+
+## ADR-013 — Cross-product access is purpose-bound
+
+- **Status:** Accepted
+- **Context:** A principal may hold a permission that is valid for one workflow but not for unrelated reuse of another product's data or capability. Authentication and broad permission alone cannot establish that a particular cross-product use is authorised.
+- **Decision:** Cross-product access must be both permission-bound and purpose-bound. Each request carries an explicit declared purpose where relevant, and the receiving product evaluates whether that purpose is authorised alongside principal, tenant, product, resource, action, consent, delegation, risk, and limits. For example, PBcoms may request PearlBridge fulfilment with purpose `fulfil_customer_order`; it may not reuse PearlBridge customer data for unrelated analytics without explicit lawful purpose and permission.
+- **Consequences:** Contracts and policy decisions must represent purpose and audit the decision. Callers cannot treat possession of a credential or scope as permission for secondary use, and receiving products remain accountable for enforcing their data purposes.
+
+## ADR-014 — No authority amplification
+
+- **Status:** Accepted
+- **Context:** Delegated agents, workflows, tools, and services can create confused-deputy paths if a downstream actor gains authority that the accountable originator did not possess or could not delegate.
+- **Decision:** An agent may never grant itself, another agent, or another service more authority than the originating principal possesses and is permitted to delegate. Authority must narrow or remain equivalent through agent-to-agent delegation, tool invocation, workflow delegation, cross-product requests, and service-to-service calls. Additional authority requires a separate independently authorised principal and a recorded policy decision.
+- **Consequences:** Delegation chains must preserve the originating principal, validate delegability at every hop, attenuate effective scopes where needed, and remain auditable. Convenience service credentials cannot silently amplify caller authority.
+
+## ADR-015 — Customer data is not an automatic training corpus
+
+- **Status:** Accepted
+- **Context:** Operational access to customer or vertical data for an authorised request does not establish a lawful or expected basis for model training or secondary cross-product learning.
+- **Decision:** Customer or vertical data must not be automatically used for model training, fine-tuning, external-provider training, or cross-product learning datasets. Any such use requires explicit governance, lawful basis, declared purpose, approval, and appropriate consent or contractual authority. Provider settings and contracts must prevent training on customer data wherever product policy or law requires it.
+- **Consequences:** Operational and training purposes remain separate; datasets require provenance and governance; model-provider selection and configuration must enforce applicable non-training commitments. Evaluation and improvement workflows cannot silently convert production data into training material.

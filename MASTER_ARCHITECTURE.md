@@ -50,6 +50,8 @@ DeepLearn Core is a shared capability layer, not a shared private-data pool.
 
 Verticals own domain policy and business operations. Core owns reusable mechanisms. For example, Core defines how an authorised tool is invoked; PearlBridge defines what a delivery is and whether it may be created.
 
+Each vertical is an autonomous product boundary. It owns its domain contracts, domain data, migrations, and operational accountability, and should have its own release lifecycle where practical. Interfaces and dependency direction must allow each vertical to become independently replaceable or deployable over time without major architectural untangling. This strengthens the modular monolith; it does not require microservices now.
+
 ## Shared-core philosophy
 
 Core capabilities are consumed through explicit, versioned interfaces. Provider-specific implementations sit behind adapters. The initial deployment preference is a modular monolith with strong module boundaries, because operational simplicity and fast learning matter more than premature distribution. Boundaries must permit later extraction without pretending every module is already a service.
@@ -60,14 +62,21 @@ Shared identity may identify the same principal across products, but authenticat
 
 - Each vertical maintains logically isolated domain data and applies tenant isolation within it.
 - No product directly queries or writes another product's private database.
-- Cross-product exchange uses authorised APIs, versioned service contracts, or events with least-privilege scopes and purpose limitation.
+- Cross-product exchange uses authorised APIs, versioned service contracts, or events with least-privilege scopes and purpose limitation. Access must be both permission-bound and purpose-bound: permission alone is insufficient, and the receiving boundary evaluates the declared purpose where relevant.
 - User consent is required where appropriate and can be revoked; derived data remains governed by its provenance and purpose.
 - Agents receive scoped tools and contextual data, never unrestricted database access.
 - Sensitive data should be minimised, classified, retained deliberately, encrypted appropriately, and excluded from logs by default.
+- Customer or vertical data is not automatically used for model training, fine-tuning, external-provider training, or cross-product learning datasets. Training use requires explicit governance, lawful basis, declared purpose, approval, and appropriate consent or contractual authority. Operational use to execute an authorised request is distinct from training use, and provider settings and contracts must prevent training on customer data wherever product policy or law requires it.
 
-Correct: `PBcoms Fulfilment Agent -> permission check -> PearlBridge Delivery API`.
+Correct: `PBcoms Fulfilment Agent -> permission check + purpose: fulfil_customer_order -> PearlBridge Delivery API`.
 
 Incorrect: `PBcoms -> PearlBridge private database`.
+
+Also incorrect: `PBcoms -> reuse PearlBridge customer data for unrelated analytics` without explicit lawful purpose and permission.
+
+## Capability discovery
+
+A **Capability Manifest** is a future-facing, versioned, machine-readable description of capabilities offered by a product, agent, or service. It may describe capability name and version, input/output schemas, required permissions and purpose, risk and side-effect classifications, possible approval requirements, idempotency behavior, and availability or deprecation state. A manifest advertises what can be requested; it never grants authority. Execution still requires authentication, permission and purpose checks, policy evaluation, and approval where applicable. No registry implementation is required at this stage.
 
 ## Humans, machines, and agent-to-agent operation
 
@@ -83,6 +92,8 @@ Human users and authorised machine agents will become first-class API consumers.
 | 4 — Execute | Act within delegated authority | Policy, limits, monitoring, audit, and revocation |
 
 Autonomy is granted per action and context, not as a blanket property of an agent. Risk, reversibility, financial impact, sensitivity, confidence, and regulation determine the required level. High-risk or consequential actions require human approval unless explicit delegated authority covers that exact action.
+
+Provisionally, a **consequential action** is one that may create a meaningful financial, legal or regulatory, physical-world, privacy or data-sharing, or safety effect; an irreversible or difficult-to-reverse effect; an account, identity, or permission change; or an externally visible commitment or transaction. Product-specific policy may refine this definition, but implementations must not invent incompatible meanings independently.
 
 ## Outcome and data flywheels
 
