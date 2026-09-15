@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "tool_request_id": "toolreq_test_0001",
+  "execution_id": "exec_test_0001",
+  "tool_id": "test.safe_echo",
+  "tool_version": "1.0.0",
+  "arguments": { "value": "synthetic hello" },
+  "principal_context": {
+    "schema_version": "1.0",
+    "principal_type": "human",
+    "principal_id": "human.test_user",
+    "tenant_id": "tenant.test",
+    "product_id": "deeplearn.test",
+    "roles": ["test.operator"],
+    "scopes": ["test.safe_tool.invoke"],
+    "delegated_authority": {
+      "originating_principal_reference": "principal/human.test_user",
+      "delegation_reference": "delegation/test-0001",
+      "delegable_scopes": ["test.safe_tool.invoke"],
+      "effective_scopes": ["test.safe_tool.invoke"],
+      "policy_references": ["policy/m1-test-v1"],
+      "expires_at": "2030-01-01T01:00:00Z"
+    },
+    "purpose": "test.execute_safe_tool"
+  },
+  "requested_action": "test.safe_tool.invoke",
+  "purpose": "test.execute_safe_tool",
+  "consequential": false,
+  "approval": { "required": false, "status": "not_required" },
+  "correlation_id": "corr_test_0001",
+  "trace_id": "trace_tool_0001",
+  "causation_id": "exec_test_0001",
+  "idempotency_key": "idem_tool_test_0001",
+  "limits": { "timeout_ms": 1000, "max_result_bytes": 1024 }
+}

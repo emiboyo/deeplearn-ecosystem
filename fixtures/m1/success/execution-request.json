@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_test_0001",
+  "agent_id": "test.safe_agent",
+  "agent_version": "1.0.0",
+  "principal_context": {
+    "schema_version": "1.0",
+    "principal_type": "human",
+    "principal_id": "human.test_user",
+    "tenant_id": "tenant.test",
+    "product_id": "deeplearn.test",
+    "roles": ["test.operator"],
+    "scopes": ["test.safe_tool.invoke"],
+    "delegated_authority": {
+      "originating_principal_reference": "principal/human.test_user",
+      "delegation_reference": "delegation/test-0001",
+      "delegable_scopes": ["test.safe_tool.invoke"],
+      "effective_scopes": ["test.safe_tool.invoke"],
+      "policy_references": ["policy/m1-test-v1"],
+      "expires_at": "2030-01-01T01:00:00Z"
+    },
+    "purpose": "test.execute_safe_tool"
+  },
+  "input": { "operation": "echo", "value": "synthetic hello" },
+  "requested_action": "test.safe_tool.invoke",
+  "purpose": "test.execute_safe_tool",
+  "consequential": false,
+  "approval": { "required": false, "status": "not_required" },
+  "correlation_id": "corr_test_0001",
+  "trace_id": "trace_test_0001",
+  "idempotency_key": "idem_test_0001",
+  "policy_envelope": { "policy_references": ["policy/m1-test-v1"], "required_scopes": ["test.safe_tool.invoke"] },
+  "budget_envelope": { "max_steps": 3, "max_duration_ms": 5000, "max_cost_units": 1 },
+  "timestamp": "2030-01-01T00:00:00Z"
+}

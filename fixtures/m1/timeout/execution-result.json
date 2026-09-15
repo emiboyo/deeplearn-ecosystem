@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_test_timeout_0001",
+  "status": "timed_out",
+  "failure": {
+    "schema_version": "1.0",
+    "category": "provider_timeout",
+    "code": "model_provider.deadline_exceeded",
+    "message": "The model capability did not respond before the execution deadline.",
+    "retryable": true,
+    "correlation_id": "corr_test_timeout_0001",
+    "trace_id": "trace_timeout_0001"
+  },
+  "correlation_id": "corr_test_timeout_0001",
+  "trace_id": "trace_timeout_0001",
+  "timing": { "started_at": "2030-01-01T00:50:00Z", "completed_at": "2030-01-01T00:50:05Z", "duration_ms": 5000 },
+  "model": { "provider_id": "provider.synthetic", "model_id": "model.synthetic", "model_version": "test-1" },
+  "audit_reference": "audit/audit_test_timeout_0001"
+}

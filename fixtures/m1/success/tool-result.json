@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "tool_request_id": "toolreq_test_0001",
+  "execution_id": "exec_test_0001",
+  "tool_id": "test.safe_echo",
+  "tool_version": "1.0.0",
+  "status": "succeeded",
+  "result": { "value": "synthetic hello" },
+  "evidence_reference": "evidence/test-0001",
+  "correlation_id": "corr_test_0001",
+  "trace_id": "trace_tool_0001",
+  "timing": { "started_at": "2030-01-01T00:00:01Z", "completed_at": "2030-01-01T00:00:01.010Z", "duration_ms": 10 }
+}

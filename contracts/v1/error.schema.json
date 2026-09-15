@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/error.schema.json",
+  "title": "DeepLearn Common Error v1",
+  "description": "Core-owned safe, machine-readable error contract. Public fields must not contain secrets, sensitive payloads, stack traces, or raw provider errors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "category", "code", "message", "retryable"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "category": {
+      "enum": ["invalid_input", "unauthenticated", "permission_denied", "approval_required", "provider_failure", "provider_timeout", "tool_failure", "tool_timeout", "policy_error", "execution_limit_exceeded", "idempotency_conflict", "internal_failure"]
+    },
+    "code": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$" },
+    "message": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "retryable": { "type": "boolean" },
+    "safe_details": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean", "null"] } },
+    "correlation_id": { "type": "string", "minLength": 8, "maxLength": 128 },
+    "trace_id": { "type": "string", "minLength": 8, "maxLength": 128 }
+  }
+}

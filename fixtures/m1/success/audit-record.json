@@ -1,0 +1,20 @@
+{
+  "audit_record_version": "1.0",
+  "audit_record_id": "audit_test_0001",
+  "timestamp": "2030-01-01T00:00:02Z",
+  "initiator": { "principal_type": "human", "principal_id": "human.test_user", "tenant_id": "tenant.test", "product_id": "deeplearn.test" },
+  "service_identity_reference": "service/test-runtime",
+  "agent": { "agent_id": "test.safe_agent", "agent_version": "1.0.0", "execution_id": "exec_test_0001" },
+  "model": { "provider_id": "provider.synthetic", "model_id": "model.synthetic", "model_version": "test-1" },
+  "tool": { "tool_id": "test.safe_echo", "tool_version": "1.0.0", "tool_request_id": "toolreq_test_0001" },
+  "permission_decision": { "decision": "allow", "decision_reference": "decision/decision_test_0001", "policy_version": "m1-test-v1" },
+  "approval": { "required": false, "status": "not_required" },
+  "requested_action": "test.safe_tool.invoke",
+  "purpose": "test.execute_safe_tool",
+  "consequential": false,
+  "data_access": { "classification": "PUBLIC_TEST", "source_references": ["fixture/synthetic-echo"], "fields_disclosed": ["value"] },
+  "outcome": "succeeded",
+  "correlation_id": "corr_test_0001",
+  "trace_id": "trace_test_0001",
+  "idempotency_key": "idem_test_0001"
+}

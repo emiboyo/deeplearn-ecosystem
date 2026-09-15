@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/principal-context.schema.json",
+  "title": "DeepLearn PrincipalContext v1",
+  "description": "Core-owned authenticated principal and delegated-authority context. This contract conveys facts for policy evaluation; it does not grant authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "principal_type", "principal_id", "tenant_id", "product_id", "roles", "scopes", "purpose"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "principal_type": { "enum": ["human", "service"] },
+    "principal_id": { "$ref": "#/$defs/identifier" },
+    "tenant_id": { "$ref": "#/$defs/identifier" },
+    "product_id": { "$ref": "#/$defs/identifier" },
+    "roles": { "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true },
+    "scopes": { "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true },
+    "consent_references": { "type": "array", "items": { "$ref": "#/$defs/reference" }, "uniqueItems": true, "default": [] },
+    "delegated_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["originating_principal_reference", "delegable_scopes", "effective_scopes", "policy_references"],
+      "properties": {
+        "originating_principal_reference": { "$ref": "#/$defs/reference" },
+        "delegation_reference": { "$ref": "#/$defs/reference" },
+        "delegable_scopes": { "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true },
+        "effective_scopes": { "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true },
+        "policy_references": { "type": "array", "items": { "$ref": "#/$defs/reference" }, "uniqueItems": true },
+        "expires_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "purpose": { "$ref": "#/$defs/identifier" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$" },
+    "reference": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{2,255}$" }
+  }
+}

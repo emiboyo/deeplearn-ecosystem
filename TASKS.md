@@ -19,10 +19,10 @@ User/Test Client
 
 ### M1.1 — Define acceptance and contracts
 
-- [ ] Write success, denial, invalid-input, provider-failure, tool-failure and timeout examples.
-- [ ] Define versioned `PrincipalContext`, `ExecutionRequest/Result`, `ToolRequest/Result`, `Decision`, error and audit schemas.
-- [ ] Classify the test data and document what must never enter prompts or logs.
-- [ ] Define correlation-ID and idempotency behavior.
+- [x] Write success, denial, invalid-input, provider-failure, tool-failure and timeout examples.
+- [x] Define versioned `PrincipalContext`, `ExecutionRequest/Result`, `ToolRequest/Result`, `Decision`, error and audit schemas.
+- [x] Classify the test data and document what must never enter prompts or logs.
+- [x] Define correlation-ID and idempotency behavior.
 - **Done when:** Contract fixtures and failure expectations are reviewed without selecting irreversible technology.
 
 ### M1.2 — Create the minimal module skeleton
