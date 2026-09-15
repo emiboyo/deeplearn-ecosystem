@@ -9,7 +9,7 @@
   "properties": {
     "schema_version": { "const": "1.0" },
     "category": {
-      "enum": ["invalid_input", "unauthenticated", "permission_denied", "approval_required", "provider_failure", "provider_timeout", "tool_failure", "tool_timeout", "policy_error", "execution_limit_exceeded", "idempotency_conflict", "internal_failure"]
+      "enum": ["invalid_input", "unauthenticated", "permission_denied", "approval_required", "provider_failure", "provider_timeout", "tool_failure", "tool_timeout", "policy_error", "execution_limit_exceeded", "idempotency_conflict", "cancelled", "internal_failure"]
     },
     "code": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$" },
     "message": { "type": "string", "minLength": 1, "maxLength": 512 },

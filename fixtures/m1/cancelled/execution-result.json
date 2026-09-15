@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_test_cancelled_0001",
+  "status": "cancelled",
+  "failure": {
+    "schema_version": "1.0",
+    "category": "cancelled",
+    "code": "execution.cancelled",
+    "message": "The synthetic execution was cancelled before completion.",
+    "retryable": false,
+    "correlation_id": "corr_test_cancelled_0001",
+    "trace_id": "trace_test_cancelled_0001"
+  },
+  "correlation_id": "corr_test_cancelled_0001",
+  "trace_id": "trace_test_cancelled_0001",
+  "timing": {
+    "started_at": "2030-01-01T01:20:00Z",
+    "completed_at": "2030-01-01T01:20:01Z",
+    "duration_ms": 1000
+  },
+  "audit_reference": "audit/audit_test_cancelled_0001"
+}

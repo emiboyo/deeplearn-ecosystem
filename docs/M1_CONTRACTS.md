@@ -80,6 +80,7 @@ Public errors never expose secrets, credentials, full sensitive payloads, stack 
 | `provider-failure/execution-result.json` | Provider failure is normalised, safe, attributable, and marked retryable without leaking raw details |
 | `tool-failure/tool-result.json` | Tool failure is normalised at the tool boundary and carries correlation/timing metadata |
 | `timeout/execution-result.json` | A provider deadline becomes the distinct `provider_timeout` category and a timed-out execution |
+| `cancelled/execution-result.json` | A cancelled execution uses the distinct `cancelled` category without being misclassified as another failure |
 | `idempotent-replay/` | Original and replay requests are materially identical and may return the recorded prior result |
 | `idempotency-conflict/` | The same scoped key with different input is rejected as `idempotency_conflict` |
 
