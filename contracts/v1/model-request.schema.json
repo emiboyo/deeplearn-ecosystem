@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/model-request.schema.json",
+  "title": "DeepLearn ModelRequest v1",
+  "description": "Model Router-owned provider-neutral request for one controlled model capability.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "capability", "input", "correlation_id", "timeout_ms", "max_output_units"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "request_id": { "$ref": "#/$defs/id" },
+    "capability": { "enum": ["text_generation"] },
+    "input": { "type": "string", "minLength": 1, "maxLength": 100000 },
+    "correlation_id": { "$ref": "#/$defs/id" },
+    "trace_id": { "$ref": "#/$defs/id" },
+    "timeout_ms": { "type": "integer", "minimum": 1 },
+    "max_output_units": { "type": "integer", "minimum": 1 }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 8, "maxLength": 128 }
+  }
+}
