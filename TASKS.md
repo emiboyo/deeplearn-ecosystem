@@ -34,9 +34,9 @@ User/Test Client
 
 ### M1.3 — Define and register the Test Agent
 
-- [ ] Create one versioned agent definition with typed input/output, tool allowlist, limits and owner.
-- [ ] Validate malformed definitions and prohibit unregistered tools.
-- [ ] Add lifecycle and version-resolution tests.
+- [x] Create one versioned agent definition with typed input/output, tool allowlist, limits and owner.
+- [x] Validate malformed definitions and prohibit unregistered tools.
+- [x] Add lifecycle and version-resolution tests.
 - **Done when:** The runtime resolves an immutable test-agent version from the registry.
 
 ### M1.4 — Implement the Model Router boundary
