@@ -13,6 +13,7 @@ from deeplearn.core.registry import (
     DuplicateDefinitionError,
     InMemoryAgentDefinitionRegistry,
     Lifecycle,
+    ModelCapability,
     ToolNotAllowedError,
     UnknownAgentError,
     UnknownAgentVersionError,
@@ -115,9 +116,27 @@ def test_undeclared_or_arbitrary_tool_is_rejected() -> None:
 
 def test_model_requirement_is_provider_neutral() -> None:
     _, definition = _registered()
-    assert definition.model_requirements.capabilities == ("text_generation",)
+    assert definition.model_requirements.capabilities == (ModelCapability.TEXT_GENERATION,)
     assert not hasattr(definition.model_requirements, "provider_id")
     assert not hasattr(definition.model_requirements, "model_id")
+
+
+def test_agent_definition_schema_controls_model_capabilities() -> None:
+    schema_path = ROOT / "contracts" / "v1" / "agent-definition.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    capability_schema = schema["properties"]["model_requirements"]["properties"]["capabilities"]["items"]
+    assert capability_schema == {"enum": ["text_generation"]}
+
+
+@pytest.mark.parametrize(
+    "capability",
+    ["openai.gpt", "anthropic.claude", "gpt.5"],
+)
+def test_unsupported_or_provider_specific_model_capability_is_rejected(capability: str) -> None:
+    document = _fixture()
+    document["model_requirements"]["capabilities"] = [capability]
+    with pytest.raises(DefinitionValidationError, match="unsupported capability"):
+        InMemoryAgentDefinitionRegistry().register(document)
 
 
 def test_returned_definition_cannot_mutate_registry_state() -> None:

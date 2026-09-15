@@ -1,6 +1,13 @@
 """Agent-definition registry boundary and M1.3 in-memory implementation."""
 
-from .definitions import AgentDefinition, AutonomyLevel, ExecutionLimits, Lifecycle, ModelRequirements
+from .definitions import (
+    AgentDefinition,
+    AutonomyLevel,
+    ExecutionLimits,
+    Lifecycle,
+    ModelCapability,
+    ModelRequirements,
+)
 from .errors import (
     DefinitionValidationError,
     DuplicateDefinitionError,
@@ -21,6 +28,7 @@ __all__ = [
     "ExecutionLimits",
     "InMemoryAgentDefinitionRegistry",
     "Lifecycle",
+    "ModelCapability",
     "ModelRequirements",
     "RegistryError",
     "ToolNotAllowedError",

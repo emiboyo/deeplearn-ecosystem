@@ -30,6 +30,12 @@ class AutonomyLevel(StrEnum):
     EXECUTE = "execute"
 
 
+class ModelCapability(StrEnum):
+    """Provider-neutral model capabilities supported for M1.3."""
+
+    TEXT_GENERATION = "text_generation"
+
+
 def _error(message: str) -> DefinitionValidationError:
     return DefinitionValidationError(message)
 
@@ -85,13 +91,17 @@ class ExecutionLimits:
 
 @dataclass(frozen=True, slots=True)
 class ModelRequirements:
-    capabilities: tuple[str, ...]
+    capabilities: tuple[ModelCapability, ...]
 
     def __post_init__(self) -> None:
-        validated = _require_identifier_tuple(
+        identifiers = _require_identifier_tuple(
             self.capabilities, "model_requirements.capabilities", non_empty=True
         )
-        object.__setattr__(self, "capabilities", validated)
+        try:
+            capabilities = tuple(ModelCapability(item) for item in identifiers)
+        except ValueError as exc:
+            raise _error("model_requirements.capabilities contains an unsupported capability") from exc
+        object.__setattr__(self, "capabilities", capabilities)
 
 
 @dataclass(frozen=True, slots=True)
@@ -201,4 +211,11 @@ class AgentDefinition:
         )
 
 
-__all__ = ["AgentDefinition", "AutonomyLevel", "ExecutionLimits", "Lifecycle", "ModelRequirements"]
+__all__ = [
+    "AgentDefinition",
+    "AutonomyLevel",
+    "ExecutionLimits",
+    "Lifecycle",
+    "ModelCapability",
+    "ModelRequirements",
+]
