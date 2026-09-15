@@ -27,9 +27,9 @@ User/Test Client
 
 ### M1.2 — Create the minimal module skeleton
 
-- [ ] Establish cohesive Core module boundaries and dependency rules for runtime, registry, model, tool, permission and audit.
-- [ ] Add a minimal test-client boundary; do not build a production UI.
-- [ ] Add architectural dependency tests or equivalent checks supported by the chosen stack.
+- [x] Establish cohesive Core module boundaries and dependency rules for runtime, registry, model, tool, permission and audit.
+- [x] Add a minimal test-client boundary; do not build a production UI.
+- [x] Add architectural dependency tests or equivalent checks supported by the chosen stack.
 - **Done when:** Modules compile/run with placeholders and no provider or vertical logic leaks across interfaces.
 
 ### M1.3 — Define and register the Test Agent
