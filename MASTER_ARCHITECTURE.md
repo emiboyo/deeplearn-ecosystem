@@ -93,6 +93,8 @@ Human users and authorised machine agents will become first-class API consumers.
 
 Autonomy is granted per action and context, not as a blanket property of an agent. Risk, reversibility, financial impact, sensitivity, confidence, and regulation determine the required level. High-risk or consequential actions require human approval unless explicit delegated authority covers that exact action.
 
+Provisionally, a **consequential action** is one that may create a meaningful financial, legal or regulatory, physical-world, privacy or data-sharing, or safety effect; an irreversible or difficult-to-reverse effect; an account, identity, or permission change; or an externally visible commitment or transaction. Product-specific policy may refine this definition, but implementations must not invent incompatible meanings independently.
+
 ## Outcome and data flywheels
 
 Useful operation creates evidence: intent, authorised context, decisions, tool results, outcomes, corrections, and feedback. With privacy and purpose controls, this evidence improves evaluations, domain knowledge, workflows, routing, and customer outcomes. Cross-product aggregation is never presumed; use requires a lawful basis, clear permission, minimisation, and a documented contract. Quantity of data alone is not the goal—trusted, representative, outcome-linked data is.

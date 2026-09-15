@@ -16,6 +16,10 @@ Three identity types must remain distinct:
 
 An Agent Execution Identity does not independently own authority. Its authority always derives from an authenticated Human Principal or Service Principal plus explicit delegation and policy. An agent may never grant itself, another agent, or another service more authority than the originating principal possesses and is permitted to delegate. Across agent-to-agent delegation, tool invocation, workflow delegation, cross-product requests, and service-to-service calls, authority may only narrow or remain equivalent unless a separate independently authorised principal grants additional authority.
 
+Delegated authority must eventually be represented by structured, machine-comparable scopes or policy facts so downstream authority can be verified as equal to or narrower than the original grant. Effective delegated authority is the intersection of the originating principal authority, delegable authority, requested action and purpose, policy constraints, and tool or service constraints. This requirement does not prescribe a specific authorisation framework.
+
+Provisionally, a **consequential action** is one that may create a meaningful financial, legal or regulatory, physical-world, privacy or data-sharing, or safety effect; an irreversible or difficult-to-reverse effect; an account, identity, or permission change; or an externally visible commitment or transaction. Product-specific policy may refine this shared definition.
+
 ## Common contract vocabulary
 
 - `PrincipalContext`: authenticated Human Principal or Service Principal, tenant, product, roles, consent and delegation references.
@@ -266,7 +270,7 @@ Every consequential request carries a stable idempotency key scoped to principal
 
 Create a correlation ID at ingress and a trace ID/span chain across synchronous and asynchronous work; preserve causation IDs for events. Do not encode sensitive information in identifiers. Audit, logs, tool calls and outcomes must be joinable through these identifiers.
 
-Trust boundaries exist at every user/device, model provider, tool, product, tenant, data store, event subscriber, adapter and external company. Authenticate, authorise and validate on each crossing. Vertical stores remain under vertical ownership; shared Core stores contain only generic platform data and explicitly governed references.
+Trust boundaries exist at every user/device, model provider, tool, product, tenant, data store, event subscriber, adapter, external company, and internal operator, support, administrator, or other privileged-access path. Authenticate, authorise and validate on each crossing. Internal privileged access is never automatically trusted merely because it is internal: it requires authentication, must be purpose-bound and least-privilege, must respect vertical and tenant boundaries, and must be audited, with break-glass controls where appropriate. Vertical stores remain under vertical ownership; shared Core stores contain only generic platform data and explicitly governed references. A full administration system is outside the current scope.
 
 ## Service-contract requirements
 
