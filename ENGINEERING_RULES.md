@@ -27,6 +27,7 @@ When sources conflict, stop, document the conflict, and seek or propose an ADR. 
 
 - Prefer a modular monolith initially. Enforce cohesion, explicit interfaces, dependency direction, and data ownership inside it.
 - Core owns generic intelligence capabilities; verticals own domain business rules.
+- Treat each vertical as an autonomous product boundary with its own domain contracts, domain data ownership, migrations, and operational accountability, and its own release lifecycle where practical. Keep boundaries independently replaceable and deployable over time without requiring microservices now.
 - A product or module accesses another boundary only through a versioned API, event, repository interface, or service contract.
 - No vertical directly reads or writes another vertical's private data store.
 - Agents use registered, typed, least-privilege tools; they do not execute arbitrary code or access arbitrary databases.
@@ -45,6 +46,8 @@ When sources conflict, stop, document the conflict, and seek or propose an ADR. 
 - Authenticate every external principal and authorise at the point of consequential use.
 - Default to least privilege and deny when required authority cannot be established.
 - Evaluate tenant, product, purpose, resource, action, consent, delegated authority, risk, and relevant limits.
+- Cross-product access must be permission-bound and purpose-bound. Carry an explicit declared purpose where relevant, and require the receiving boundary to authorise that purpose; permission alone is insufficient.
+- An agent may never grant itself, another agent, or another service more authority than the originating principal possesses and is permitted to delegate. Authority may only narrow or remain equivalent through agent delegation, tool invocation, workflows, cross-product requests, and service calls unless a separate independently authorised principal grants additional authority.
 - Require approval for consequential actions unless matching delegated authority exists. Approval requests bind the exact proposed action and expire.
 - Record consequential attempts and outcomes with initiator, subject, service identity, agent, model/provider/version when available, tools, appropriate data-access metadata, permission result, approval state, result, timestamp, trace/correlation ID, and failure details.
 - Never put secrets or unnecessary sensitive content in prompts, events, telemetry, error messages, or audit payloads.
@@ -68,6 +71,7 @@ Every meaningful feature includes proportionate unit, integration, permission, i
 - Migrations are versioned, reviewed, tested against representative data, observable, and backward-compatible during rollout where feasible.
 - Separate schema deployment from irreversible cleanup. Provide a rollback or roll-forward plan and verified backup for destructive migrations.
 - Never silently repurpose a field, weaken isolation, or copy private data across products.
+- Do not automatically use customer or vertical data for model training, fine-tuning, external-provider training, or cross-product learning datasets. Such use requires explicit governance, lawful basis, declared purpose, approval, and appropriate consent or contractual authority. Treat authorised operational processing as distinct from training, and configure provider settings and contracts to prevent training on customer data wherever product policy or law requires it.
 
 ## Documentation and ADRs
 
