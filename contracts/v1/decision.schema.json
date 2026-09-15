@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/decision.schema.json",
+  "title": "DeepLearn Decision v1",
+  "description": "Core Permission Engine-owned explainable authorisation decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "decision", "reasons", "policy_version", "constraints", "evaluated_action", "evaluated_purpose", "principal_reference", "consequential", "approval", "timestamp", "correlation_id"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "decision_id": { "$ref": "#/$defs/id" },
+    "decision": { "enum": ["allow", "deny", "require_approval"] },
+    "reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "$ref": "#/$defs/name" },
+          "message": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      }
+    },
+    "policy_version": { "type": "string", "minLength": 1 },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "effective_scopes": { "type": "array", "items": { "$ref": "#/$defs/name" }, "uniqueItems": true },
+        "max_duration_ms": { "type": "integer", "minimum": 1 },
+        "expires_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "evaluated_action": { "$ref": "#/$defs/name" },
+    "evaluated_purpose": { "$ref": "#/$defs/name" },
+    "principal_reference": { "type": "string", "minLength": 3 },
+    "consequential": { "type": "boolean" },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "status": { "enum": ["not_required", "pending", "approved", "rejected", "expired", "revoked"] },
+        "reference": { "type": "string", "minLength": 3 }
+      }
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "correlation_id": { "$ref": "#/$defs/id" },
+    "trace_id": { "$ref": "#/$defs/id" }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 8, "maxLength": 128 },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$" }
+  }
+}

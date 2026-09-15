@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "category": "idempotency_conflict",
+  "code": "idempotency.key_reused_with_different_request",
+  "message": "The idempotency key was already used for a materially different request.",
+  "retryable": false,
+  "correlation_id": "corr_test_conflict_0002"
+}

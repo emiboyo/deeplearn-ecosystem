@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/tool-request.schema.json",
+  "title": "DeepLearn ToolRequest v1",
+  "description": "Core Tool Registry-owned request for a registered, versioned tool capability.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool_request_id", "execution_id", "tool_id", "tool_version", "arguments", "principal_context", "requested_action", "purpose", "consequential", "correlation_id", "idempotency_key"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "tool_request_id": { "$ref": "#/$defs/id" },
+    "execution_id": { "$ref": "#/$defs/id" },
+    "tool_id": { "$ref": "#/$defs/name" },
+    "tool_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "arguments": { "type": "object" },
+    "principal_context": { "$ref": "principal-context.schema.json" },
+    "requested_action": { "$ref": "#/$defs/name" },
+    "purpose": { "$ref": "#/$defs/name" },
+    "consequential": { "type": "boolean" },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "status": { "enum": ["not_required", "pending", "approved", "rejected", "expired", "revoked"] },
+        "reference": { "type": "string", "minLength": 3 }
+      }
+    },
+    "correlation_id": { "$ref": "#/$defs/id" },
+    "trace_id": { "$ref": "#/$defs/id" },
+    "causation_id": { "$ref": "#/$defs/id" },
+    "idempotency_key": { "$ref": "#/$defs/id" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeout_ms": { "type": "integer", "minimum": 1 },
+        "max_result_bytes": { "type": "integer", "minimum": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 8, "maxLength": 128 },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$" }
+  }
+}

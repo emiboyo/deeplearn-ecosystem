@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "decision_id": "decision_test_denied_0001",
+  "decision": "deny",
+  "reasons": [{ "code": "purpose_not_allowed", "message": "The requested purpose is not authorised for this principal." }],
+  "policy_version": "m1-test-v1",
+  "constraints": { "effective_scopes": [] },
+  "evaluated_action": "test.safe_tool.invoke",
+  "evaluated_purpose": "test.read_capability",
+  "principal_reference": "principal/human.test_user",
+  "consequential": false,
+  "approval": { "required": false, "status": "not_required" },
+  "timestamp": "2030-01-01T00:10:00Z",
+  "correlation_id": "corr_test_denied_0001",
+  "trace_id": "trace_policy_denied_0001"
+}

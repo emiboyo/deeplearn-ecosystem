@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "tool_request_id": "toolreq_test_failure_0001",
+  "execution_id": "exec_test_tool_failure_0001",
+  "tool_id": "test.safe_echo",
+  "tool_version": "1.0.0",
+  "status": "failed",
+  "failure": {
+    "schema_version": "1.0",
+    "category": "tool_failure",
+    "code": "tool.synthetic_failure",
+    "message": "The synthetic tool could not complete the request.",
+    "retryable": false,
+    "correlation_id": "corr_test_tool_failure_0001",
+    "trace_id": "trace_tool_failure_0001"
+  },
+  "correlation_id": "corr_test_tool_failure_0001",
+  "trace_id": "trace_tool_failure_0001",
+  "timing": { "started_at": "2030-01-01T00:40:00Z", "completed_at": "2030-01-01T00:40:00.025Z", "duration_ms": 25 }
+}

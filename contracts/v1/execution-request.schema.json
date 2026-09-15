@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/execution-request.schema.json",
+  "title": "DeepLearn ExecutionRequest v1",
+  "description": "Core Agent Runtime-owned request to execute one versioned agent under an authenticated principal context.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "execution_id", "agent_id", "agent_version", "principal_context", "input", "requested_action", "purpose", "consequential", "correlation_id", "idempotency_key", "timestamp"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "execution_id": { "$ref": "#/$defs/id" },
+    "agent_id": { "$ref": "#/$defs/name" },
+    "agent_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "principal_context": { "$ref": "principal-context.schema.json" },
+    "input": { "type": "object" },
+    "requested_action": { "$ref": "#/$defs/name" },
+    "purpose": { "$ref": "#/$defs/name" },
+    "consequential": { "type": "boolean" },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "status": { "enum": ["not_required", "pending", "approved", "rejected", "expired", "revoked"] },
+        "reference": { "type": "string", "minLength": 3, "maxLength": 255 }
+      }
+    },
+    "correlation_id": { "$ref": "#/$defs/id" },
+    "trace_id": { "$ref": "#/$defs/id" },
+    "causation_id": { "$ref": "#/$defs/id" },
+    "idempotency_key": { "$ref": "#/$defs/id" },
+    "policy_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policy_references": { "type": "array", "items": { "type": "string", "minLength": 3 }, "uniqueItems": true },
+        "required_scopes": { "type": "array", "items": { "$ref": "#/$defs/name" }, "uniqueItems": true }
+      }
+    },
+    "budget_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_steps": { "type": "integer", "minimum": 1 },
+        "max_duration_ms": { "type": "integer", "minimum": 1 },
+        "max_cost_units": { "type": "number", "minimum": 0 }
+      }
+    },
+    "timestamp": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 8, "maxLength": 128 },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$" }
+  }
+}

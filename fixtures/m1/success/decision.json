@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "decision_id": "decision_test_0001",
+  "decision": "allow",
+  "reasons": [{ "code": "scope_and_purpose_allowed", "message": "Synthetic test scope and purpose are allowed." }],
+  "policy_version": "m1-test-v1",
+  "constraints": { "effective_scopes": ["test.safe_tool.invoke"], "max_duration_ms": 5000, "expires_at": "2030-01-01T01:00:00Z" },
+  "evaluated_action": "test.safe_tool.invoke",
+  "evaluated_purpose": "test.execute_safe_tool",
+  "principal_reference": "principal/human.test_user",
+  "consequential": false,
+  "approval": { "required": false, "status": "not_required" },
+  "timestamp": "2030-01-01T00:00:00Z",
+  "correlation_id": "corr_test_0001",
+  "trace_id": "trace_policy_0001"
+}

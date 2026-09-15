@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "category": "invalid_input",
+  "code": "request.schema_validation_failed",
+  "message": "The request does not satisfy ExecutionRequest v1.",
+  "retryable": false,
+  "safe_details": { "field": "agent_version" },
+  "correlation_id": "corr_test_invalid_0001"
+}

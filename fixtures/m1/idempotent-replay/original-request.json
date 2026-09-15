@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_test_replay_0001",
+  "agent_id": "test.safe_agent",
+  "agent_version": "1.0.0",
+  "principal_context": {
+    "schema_version": "1.0",
+    "principal_type": "human",
+    "principal_id": "human.test_user",
+    "tenant_id": "tenant.test",
+    "product_id": "deeplearn.test",
+    "roles": ["test.operator"],
+    "scopes": ["test.safe_tool.invoke"],
+    "purpose": "test.execute_safe_tool"
+  },
+  "input": { "operation": "echo", "value": "synthetic replay" },
+  "requested_action": "test.safe_tool.invoke",
+  "purpose": "test.execute_safe_tool",
+  "consequential": false,
+  "approval": { "required": false, "status": "not_required" },
+  "correlation_id": "corr_test_replay_0001",
+  "trace_id": "trace_test_replay_0001",
+  "idempotency_key": "idem_test_replay_0001",
+  "timestamp": "2030-01-01T01:00:00Z"
+}

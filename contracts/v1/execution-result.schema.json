@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/execution-result.schema.json",
+  "title": "DeepLearn ExecutionResult v1",
+  "description": "Core Agent Runtime-owned terminal or paused result for one execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "execution_id", "status", "correlation_id", "timing"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "execution_id": { "$ref": "#/$defs/id" },
+    "status": { "enum": ["succeeded", "failed", "denied", "approval_required", "timed_out", "cancelled"] },
+    "output": { "type": "object" },
+    "failure": { "$ref": "error.schema.json" },
+    "correlation_id": { "$ref": "#/$defs/id" },
+    "trace_id": { "$ref": "#/$defs/id" },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at", "completed_at", "duration_ms"],
+      "properties": {
+        "started_at": { "type": "string", "format": "date-time" },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "duration_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "model_id"],
+      "properties": {
+        "provider_id": { "type": "string", "minLength": 3 },
+        "model_id": { "type": "string", "minLength": 3 },
+        "model_version": { "type": "string" }
+      }
+    },
+    "tool_activity_references": { "type": "array", "items": { "type": "string", "minLength": 3 }, "uniqueItems": true },
+    "audit_reference": { "type": "string", "minLength": 3 }
+  },
+  "oneOf": [
+    { "required": ["output"], "not": { "required": ["failure"] } },
+    { "required": ["failure"], "not": { "required": ["output"] } }
+  ],
+  "$defs": { "id": { "type": "string", "minLength": 8, "maxLength": 128 } }
+}

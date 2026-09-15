@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/audit-record.schema.json",
+  "title": "DeepLearn AuditRecord v1",
+  "description": "Core Audit System-owned minimised record of a consequential or otherwise auditable attempt and outcome. Secrets and full sensitive payloads are excluded by default.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["audit_record_version", "audit_record_id", "timestamp", "initiator", "agent", "permission_decision", "approval", "requested_action", "purpose", "data_access", "outcome", "correlation_id", "idempotency_key"],
+  "properties": {
+    "audit_record_version": { "const": "1.0" },
+    "audit_record_id": { "$ref": "#/$defs/id" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "initiator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principal_type", "principal_id", "tenant_id", "product_id"],
+      "properties": {
+        "principal_type": { "enum": ["human", "service"] },
+        "principal_id": { "$ref": "#/$defs/name" },
+        "tenant_id": { "$ref": "#/$defs/name" },
+        "product_id": { "$ref": "#/$defs/name" }
+      }
+    },
+    "service_identity_reference": { "type": "string", "minLength": 3 },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent_id", "agent_version", "execution_id"],
+      "properties": {
+        "agent_id": { "$ref": "#/$defs/name" },
+        "agent_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "execution_id": { "$ref": "#/$defs/id" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "model_id"],
+      "properties": {
+        "provider_id": { "type": "string", "minLength": 3 },
+        "model_id": { "type": "string", "minLength": 3 },
+        "model_version": { "type": "string" }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_id", "tool_version"],
+      "properties": {
+        "tool_id": { "$ref": "#/$defs/name" },
+        "tool_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "tool_request_id": { "$ref": "#/$defs/id" }
+      }
+    },
+    "permission_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "decision_reference", "policy_version"],
+      "properties": {
+        "decision": { "enum": ["allow", "deny", "require_approval"] },
+        "decision_reference": { "type": "string", "minLength": 3 },
+        "policy_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "status": { "enum": ["not_required", "pending", "approved", "rejected", "expired", "revoked"] },
+        "reference": { "type": "string", "minLength": 3 }
+      }
+    },
+    "requested_action": { "$ref": "#/$defs/name" },
+    "purpose": { "$ref": "#/$defs/name" },
+    "consequential": { "type": "boolean" },
+    "data_access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "source_references", "fields_disclosed"],
+      "properties": {
+        "classification": { "enum": ["PUBLIC_TEST", "INTERNAL_TEST", "SENSITIVE", "RESTRICTED"] },
+        "source_references": { "type": "array", "items": { "type": "string", "minLength": 3 }, "uniqueItems": true },
+        "fields_disclosed": { "type": "array", "items": { "$ref": "#/$defs/name" }, "uniqueItems": true }
+      }
+    },
+    "outcome": { "enum": ["succeeded", "failed", "denied", "approval_required", "timed_out", "cancelled"] },
+    "failure": { "$ref": "error.schema.json" },
+    "correlation_id": { "$ref": "#/$defs/id" },
+    "trace_id": { "$ref": "#/$defs/id" },
+    "idempotency_key": { "$ref": "#/$defs/id" }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 8, "maxLength": 128 },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$" }
+  }
+}

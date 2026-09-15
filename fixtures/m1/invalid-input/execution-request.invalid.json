@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_test_invalid_0001",
+  "agent_id": "test.safe_agent",
+  "agent_version": "not-a-version",
+  "principal_context": {
+    "schema_version": "1.0",
+    "principal_type": "human",
+    "principal_id": "human.test_user",
+    "tenant_id": "tenant.test",
+    "product_id": "deeplearn.test",
+    "roles": ["test.operator"],
+    "scopes": ["test.safe_tool.invoke"],
+    "purpose": "test.execute_safe_tool"
+  },
+  "input": { "operation": "echo" },
+  "requested_action": "test.safe_tool.invoke",
+  "purpose": "free text purpose is invalid",
+  "consequential": false,
+  "correlation_id": "corr_test_invalid_0001",
+  "idempotency_key": "idem_test_invalid_0001",
+  "timestamp": "2030-01-01T00:20:00Z"
+}

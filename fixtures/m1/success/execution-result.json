@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_test_0001",
+  "status": "succeeded",
+  "output": { "message": "synthetic hello" },
+  "correlation_id": "corr_test_0001",
+  "trace_id": "trace_test_0001",
+  "timing": { "started_at": "2030-01-01T00:00:00Z", "completed_at": "2030-01-01T00:00:02Z", "duration_ms": 2000 },
+  "model": { "provider_id": "provider.synthetic", "model_id": "model.synthetic", "model_version": "test-1" },
+  "tool_activity_references": ["tool-request/toolreq_test_0001"],
+  "audit_reference": "audit/audit_test_0001"
+}

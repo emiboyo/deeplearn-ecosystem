@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_test_provider_failure_0001",
+  "status": "failed",
+  "failure": {
+    "schema_version": "1.0",
+    "category": "provider_failure",
+    "code": "model_provider.unavailable",
+    "message": "The model capability is temporarily unavailable.",
+    "retryable": true,
+    "correlation_id": "corr_test_provider_failure_0001",
+    "trace_id": "trace_provider_failure_0001"
+  },
+  "correlation_id": "corr_test_provider_failure_0001",
+  "trace_id": "trace_provider_failure_0001",
+  "timing": { "started_at": "2030-01-01T00:30:00Z", "completed_at": "2030-01-01T00:30:01Z", "duration_ms": 1000 },
+  "model": { "provider_id": "provider.synthetic", "model_id": "model.synthetic", "model_version": "test-1" },
+  "audit_reference": "audit/audit_test_provider_failure_0001"
+}
