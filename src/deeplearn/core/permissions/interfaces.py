@@ -1,18 +1,18 @@
-"""Owned interface for permission and purpose evaluation.
+"""Owned interface for permission and purpose evaluation."""
 
-No role, scope, or allow/deny policy is implemented in M1.2.
-"""
-
+from collections.abc import Mapping
 from typing import Protocol
 
-from deeplearn.core.contracts import WireDocument
+from .contracts import PermissionDecision, PermissionRequest
 
 
 class PermissionEvaluator(Protocol):
-    """Evaluate authority facts and return a canonical Decision document."""
+    """Evaluate authority facts without executing the requested action."""
 
-    def evaluate(self, request: WireDocument) -> WireDocument:
-        """Return a decision without executing the requested action."""
+    def evaluate(
+        self, request: PermissionRequest | Mapping[str, object]
+    ) -> PermissionDecision:
+        """Return a machine-readable, fail-closed permission decision."""
 
 
 __all__ = ["PermissionEvaluator"]
