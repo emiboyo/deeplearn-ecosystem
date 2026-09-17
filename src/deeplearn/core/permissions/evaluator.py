@@ -18,6 +18,7 @@ SAFE_REASONS = {
     ReasonCode.ALLOWED: "The explicit synthetic policy allows this request.",
     ReasonCode.UNAUTHENTICATED: "An authenticated originating principal is required.",
     ReasonCode.WRONG_TENANT: "The request crosses the principal tenant boundary.",
+    ReasonCode.WRONG_PRODUCT: "The request crosses the principal product boundary.",
     ReasonCode.MISSING_SCOPE: "The originating authority does not cover the required scope.",
     ReasonCode.PURPOSE_NOT_ALLOWED: "The requested purpose is not allowed.",
     ReasonCode.ACTION_NOT_ALLOWED: "The requested action is not allowed.",
@@ -51,6 +52,8 @@ class DenyByDefaultPermissionEvaluator:
             return self._deny(validated, None, ReasonCode.UNAUTHENTICATED)
         if validated.tenant_id != principal.tenant_id:
             return self._deny(validated, None, ReasonCode.WRONG_TENANT)
+        if validated.product_id != principal.product_id:
+            return self._deny(validated, None, ReasonCode.WRONG_PRODUCT)
 
         policy = self._policies.resolve(validated.tool_id, validated.tool_version)
         if policy is None:

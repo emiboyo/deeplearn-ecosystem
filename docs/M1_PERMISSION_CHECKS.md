@@ -21,9 +21,9 @@ The immutable policy is `test.safe_echo.invoke@1.0.0`. It matches only:
 
 There are no wildcards, prefixes, fuzzy matches, admin bypasses, superusers, or implicit allows. If no exact tool/version policy exists, the request is denied.
 
-## Principals and tenant boundary
+## Principals, tenant, and product boundaries
 
-Human Principals and Service Principals remain distinct controlled types. An optional Agent Execution Identity is attributable context only and contributes no scope or independent authority. An unauthenticated originating principal is denied. The request tenant must equal the principal tenant; cross-tenant access is denied.
+Human Principals and Service Principals remain distinct controlled types. An optional Agent Execution Identity is attributable context only and contributes no scope or independent authority. An unauthenticated originating principal is denied. An originating principal is bound to both its tenant and product boundary in M1.6: the request tenant and product must exactly equal the corresponding principal values. Cross-tenant and cross-product access are denied, and neither valid scopes nor an agent execution identity can bypass these checks.
 
 The canonical `PrincipalContext` remains the wire authority-fact contract. The owned M1.6 types add the explicit authenticated fact required by this local evaluator and preserve principal, tenant, product, scope, and delegation data without implementing an identity provider.
 
@@ -39,9 +39,9 @@ Purpose and action use exact controlled identifiers. Missing values are malforme
 
 ## Decisions and failure behavior
 
-The Python decision preserves canonical Decision naming for `decision`, `reasons`, `policy_version`, `evaluated_action`, `evaluated_purpose`, principal reference, consequential status, and correlation/trace identifiers. The exact policy ID/version and the narrow effective scopes are recorded. Outcomes are `allow` and `deny`; policy errors are fail-closed denials.
+The Python decision preserves canonical Decision naming for `decision`, `reasons`, `policy_version`, `evaluated_action`, `evaluated_purpose`, principal reference, consequential status, and correlation/trace identifiers. The exact policy ID/version and the narrow effective scopes are recorded. The canonical Decision contract has no product field, so this narrow fix evaluates the product boundary without adding a divergent decision field. Outcomes are `allow` and `deny`; policy errors are fail-closed denials.
 
-Stable reason codes are `allowed`, `unauthenticated`, `wrong_tenant`, `missing_scope`, `purpose_not_allowed`, `action_not_allowed`, `consequential_not_allowed`, `policy_not_found`, `policy_error`, and `malformed_permission_request`. Messages are bounded and safe. Raw exceptions and internal details never enter decisions.
+Stable reason codes are `allowed`, `unauthenticated`, `wrong_tenant`, `wrong_product`, `missing_scope`, `purpose_not_allowed`, `action_not_allowed`, `consequential_not_allowed`, `policy_not_found`, `policy_error`, and `malformed_permission_request`. Messages are bounded and safe. Raw exceptions and internal details never enter decisions.
 
 ## Deferred work
 

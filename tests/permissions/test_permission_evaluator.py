@@ -114,6 +114,66 @@ def test_wrong_tenant_is_denied() -> None:
     )
 
 
+def test_matching_product_is_allowed_when_all_other_facts_are_valid() -> None:
+    decision = evaluator().evaluate(request(product_id="deeplearn.test"))
+    assert decision.outcome is DecisionOutcome.ALLOW
+    assert decision.reason.code is ReasonCode.ALLOWED
+
+
+def test_wrong_product_is_denied_with_stable_reason() -> None:
+    assert_reason(
+        evaluator().evaluate(request(product_id="other.product")),
+        ReasonCode.WRONG_PRODUCT,
+    )
+
+
+def test_matching_tenant_does_not_compensate_for_wrong_product() -> None:
+    permission_request = request(
+        tenant_id="tenant.test.alpha",
+        product_id="other.product",
+    )
+    assert permission_request.tenant_id == permission_request.principal.tenant_id
+    assert_reason(
+        evaluator().evaluate(permission_request),
+        ReasonCode.WRONG_PRODUCT,
+    )
+
+
+def test_valid_authority_facts_do_not_compensate_for_wrong_product() -> None:
+    permission_request = request(product_id="other.product")
+    assert permission_request.requested_scopes == ("test.safe_tool.invoke",)
+    assert permission_request.purpose == "test.execute_safe_tool"
+    assert permission_request.requested_action == "test.safe_tool.invoke"
+    assert_reason(
+        evaluator().evaluate(permission_request),
+        ReasonCode.WRONG_PRODUCT,
+    )
+
+
+def test_agent_execution_identity_cannot_bypass_product_boundary() -> None:
+    assert_reason(
+        evaluator().evaluate(
+            request(
+                product_id="other.product",
+                agent_execution_id="agentexec_test_0001",
+            )
+        ),
+        ReasonCode.WRONG_PRODUCT,
+    )
+
+
+def test_service_principal_is_also_product_bound() -> None:
+    assert_reason(
+        evaluator().evaluate(
+            request(
+                principal=principal(principal_type=PrincipalType.SERVICE),
+                product_id="other.product",
+            )
+        ),
+        ReasonCode.WRONG_PRODUCT,
+    )
+
+
 @pytest.mark.parametrize("scopes", [(), ("test.wrong_scope",)])
 def test_missing_or_wrong_principal_scope_is_denied(scopes) -> None:
     assert_reason(

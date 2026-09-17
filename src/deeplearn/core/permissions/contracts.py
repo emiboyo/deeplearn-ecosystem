@@ -28,6 +28,7 @@ class ReasonCode(StrEnum):
     ALLOWED = "allowed"
     UNAUTHENTICATED = "unauthenticated"
     WRONG_TENANT = "wrong_tenant"
+    WRONG_PRODUCT = "wrong_product"
     MISSING_SCOPE = "missing_scope"
     PURPOSE_NOT_ALLOWED = "purpose_not_allowed"
     ACTION_NOT_ALLOWED = "action_not_allowed"
