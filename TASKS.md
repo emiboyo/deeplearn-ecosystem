@@ -56,9 +56,9 @@ User/Test Client
 
 ### M1.6 — Implement permission checks
 
-- [ ] Define the first explicit role/scope policy and deny-by-default behavior.
-- [ ] Evaluate before tool execution and return machine-readable reasons.
-- [ ] Test allowed, denied, wrong-tenant, missing-scope and policy-error cases.
+- [x] Define the first explicit role/scope policy and deny-by-default behavior.
+- [x] Evaluate before tool execution and return machine-readable reasons.
+- [x] Test allowed, denied, wrong-tenant, missing-scope and policy-error cases.
 - **Done when:** No safe-tool execution path can bypass a recorded permission decision.
 
 ### M1.7 — Orchestrate bounded execution
