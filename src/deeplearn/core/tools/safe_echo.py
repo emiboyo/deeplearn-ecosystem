@@ -19,18 +19,27 @@ class SafeEchoFailure(StrEnum):
 
 
 class SafeEchoAdapter:
-    tool_id = "test.safe_echo"
-    version = "1.0.0"
-
     def __init__(
         self,
         *,
+        tool_id: str = "test.safe_echo",
+        version: str = "1.0.0",
         failure: SafeEchoFailure | None = None,
         latency_ms: int = 5,
     ) -> None:
+        self._tool_id = tool_id
+        self._version = version
         self.failure = failure
         self.latency_ms = latency_ms
         self.invocation_count = 0
+
+    @property
+    def tool_id(self) -> str:
+        return self._tool_id
+
+    @property
+    def version(self) -> str:
+        return self._version
 
     def validate_arguments(
         self, arguments: Mapping[str, object], max_input_chars: int

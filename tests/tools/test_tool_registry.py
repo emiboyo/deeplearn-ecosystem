@@ -69,13 +69,31 @@ def test_multiple_explicit_versions_can_coexist_without_latest_alias() -> None:
     registry, first, _ = registered()
     document = definition_document()
     document["version"] = "1.1.0"
-    second_adapter = SafeEchoAdapter()
-    second_adapter.version = "1.1.0"
+    second_adapter = SafeEchoAdapter(version="1.1.0")
     second = registry.register(document, second_adapter)
     assert registry.resolve("test.safe_echo", "1.0.0")[0] is first
     assert registry.resolve("test.safe_echo", "1.1.0")[0] is second
     with pytest.raises(UnknownToolVersionError):
         registry.resolve("test.safe_echo", "latest")
+
+
+def test_registered_adapter_identity_is_read_only_and_exact() -> None:
+    registry, definition, adapter = registered()
+
+    with pytest.raises(AttributeError):
+        adapter.tool_id = "test.changed"
+    with pytest.raises(AttributeError):
+        adapter.version = "9.9.9"
+
+    resolved_definition, resolved_adapter = registry.resolve(
+        "test.safe_echo", "1.0.0"
+    )
+    assert resolved_definition is definition
+    assert resolved_adapter is adapter
+    assert (resolved_adapter.tool_id, resolved_adapter.version) == (
+        definition.tool_id,
+        definition.version,
+    )
 
 
 @pytest.mark.parametrize(
