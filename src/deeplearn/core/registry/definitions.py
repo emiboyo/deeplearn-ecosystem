@@ -6,6 +6,7 @@ from datetime import datetime
 from enum import StrEnum
 import re
 
+from deeplearn.core.contracts import ModelCapability
 from deeplearn.core.registry.errors import DefinitionValidationError
 
 
@@ -28,12 +29,6 @@ class AutonomyLevel(StrEnum):
     RECOMMEND = "recommend"
     PREPARE = "prepare"
     EXECUTE = "execute"
-
-
-class ModelCapability(StrEnum):
-    """Provider-neutral model capabilities supported for M1.3."""
-
-    TEXT_GENERATION = "text_generation"
 
 
 def _error(message: str) -> DefinitionValidationError:
@@ -216,6 +211,5 @@ __all__ = [
     "AutonomyLevel",
     "ExecutionLimits",
     "Lifecycle",
-    "ModelCapability",
     "ModelRequirements",
 ]

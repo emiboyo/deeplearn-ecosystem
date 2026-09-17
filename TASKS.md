@@ -41,10 +41,10 @@ User/Test Client
 
 ### M1.4 — Implement the Model Router boundary
 
-- [ ] Define the owned model request/result and capability contracts.
-- [ ] Build a deterministic fake adapter for tests.
-- [ ] Add one real provider adapter only if separately authorised and needed; keep secrets external.
-- [ ] Record selected provider/model/version when available, latency and usage.
+- [x] Define the owned model request/result and capability contracts.
+- [x] Build a deterministic fake adapter for tests.
+- [x] Confirm no real provider adapter is authorised or needed for M1.4; keep secrets external.
+- [x] Record selected provider/model/version when available, latency and usage.
 - **Done when:** Provider substitution requires no domain or agent-runtime change and errors are normalised.
 
 ### M1.5 — Implement one safe tool

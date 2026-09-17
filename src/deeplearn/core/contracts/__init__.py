@@ -7,6 +7,8 @@ only a minimal interface annotation and is not a second contract model.
 from collections.abc import Mapping
 from typing import TypeAlias
 
+from .model_capabilities import ModelCapability
+
 WireDocument: TypeAlias = Mapping[str, object]
 
-__all__ = ["WireDocument"]
+__all__ = ["ModelCapability", "WireDocument"]

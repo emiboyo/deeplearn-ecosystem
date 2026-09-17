@@ -1,11 +1,12 @@
 """Agent-definition registry boundary and M1.3 in-memory implementation."""
 
+from deeplearn.core.contracts import ModelCapability
+
 from .definitions import (
     AgentDefinition,
     AutonomyLevel,
     ExecutionLimits,
     Lifecycle,
-    ModelCapability,
     ModelRequirements,
 )
 from .errors import (

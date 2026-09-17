@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.deeplearn.example/contracts/v1/model-error.schema.json",
+  "title": "DeepLearn ModelError v1",
+  "description": "Model Router-owned safe failure. Raw adapter/provider errors and stack traces are prohibited.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["category", "code", "message", "retryable"],
+  "properties": {
+    "category": {
+      "enum": ["unsupported_capability", "provider_unavailable", "provider_failure", "provider_timeout", "invalid_model_request"]
+    },
+    "code": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$" },
+    "message": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "retryable": { "type": "boolean" }
+  }
+}
