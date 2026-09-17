@@ -5,7 +5,7 @@
   "tool_id": "test.safe_echo",
   "tool_version": "1.0.0",
   "status": "succeeded",
-  "result": { "value": "synthetic hello" },
+  "result": { "message": "synthetic hello" },
   "evidence_reference": "evidence/test-0001",
   "correlation_id": "corr_test_0001",
   "trace_id": "trace_tool_0001",
