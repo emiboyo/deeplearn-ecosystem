@@ -30,8 +30,16 @@
     }
   },
   "oneOf": [
-    { "required": ["result"], "not": { "required": ["failure"] } },
-    { "required": ["failure"], "not": { "required": ["result"] } }
+    {
+      "properties": { "status": { "const": "succeeded" } },
+      "required": ["result"],
+      "not": { "required": ["failure"] }
+    },
+    {
+      "properties": { "status": { "enum": ["failed", "timed_out", "denied"] } },
+      "required": ["failure"],
+      "not": { "required": ["result"] }
+    }
   ],
   "$defs": {
     "id": { "type": "string", "minLength": 8, "maxLength": 128 },

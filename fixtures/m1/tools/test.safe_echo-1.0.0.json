@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "tool_id": "test.safe_echo",
+  "version": "1.0.0",
+  "owner": "deeplearn.core.test",
+  "purpose": "Return bounded synthetic text for the Milestone 1 test path.",
+  "lifecycle": "active",
+  "input_contract_ref": "contracts/v1/tools/test-safe-echo-input.schema.json",
+  "output_contract_ref": "contracts/v1/tools/test-safe-echo-output.schema.json",
+  "required_scopes": ["test.safe_tool.invoke"],
+  "allowed_purposes": ["test.execute_safe_tool"],
+  "risk": "low",
+  "side_effect": "none",
+  "timeout_ms": 1000,
+  "max_input_chars": 256,
+  "max_output_chars": 256,
+  "idempotent": true,
+  "consequential": false,
+  "created_at": "2030-01-01T00:00:00Z"
+}

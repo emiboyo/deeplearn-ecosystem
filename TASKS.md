@@ -49,9 +49,9 @@ User/Test Client
 
 ### M1.5 — Implement one safe tool
 
-- [ ] Choose a read-only, deterministic, non-sensitive tool such as a bounded calculation or static capability lookup.
-- [ ] Define schemas, owner, risk, scopes, limits, timeout and side-effect metadata.
-- [ ] Validate input/output and test malformed, oversized, timeout and unavailable paths.
+- [x] Choose a read-only, deterministic, non-sensitive tool such as a bounded calculation or static capability lookup.
+- [x] Define schemas, owner, risk, scopes, limits, timeout and side-effect metadata.
+- [x] Validate input/output and test malformed, oversized, timeout and unavailable paths.
 - **Done when:** Only registered calls with valid arguments can reach the adapter.
 
 ### M1.6 — Implement permission checks
